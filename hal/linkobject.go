@@ -11,24 +11,25 @@ import "errors"
 // See https://tools.ietf.org/html/draft-kelly-json-hal for
 // property description.
 type LinkObject struct {
-	Href        string `json:"href,omitempty"`        //required
-	Method      string `json:"method,omitempty"`      //required
-	Templated   bool   `json:"templated,omitempty"`   //optional
-	Type        string `json:"type,omitempty"`        //optional
-	Deprecation string `json:"deprecation,omitempty"` //optional
-	Name        string `json:"name,omitempty"`        //optional
-	Profile     string `json:"profile,omitempty"`     //optional
-	Title       string `json:"title,omitempty"`       //optional
-	HrefLang    string `json:"hreflang,omitempty"`    //optional
+	Href        string   `json:"href,omitempty"`        //required
+	Method      string   `json:"method,omitempty"`      //required
+	Allow       []string `json:"allow,omitempty"`       //optional
+	Templated   bool     `json:"templated,omitempty"`   //optional
+	Type        string   `json:"type,omitempty"`        //optional
+	Deprecation string   `json:"deprecation,omitempty"` //optional
+	Name        string   `json:"name,omitempty"`        //optional
+	Profile     string   `json:"profile,omitempty"`     //optional
+	Title       string   `json:"title,omitempty"`       //optional
+	HrefLang    string   `json:"hreflang,omitempty"`    //optional
 }
 
 // NewLinkObject initializes a LinkObject with it's required href value.
-func NewLinkObject(href, method string) (*LinkObject, error) {
+func NewLinkObject(href string, method string) (*LinkObject, error) {
 	if href == "" {
 		return nil, errors.New("LinkObject requires a href value")
 	}
 
-	return &LinkObject{Href: href}, nil
+	return &LinkObject{Href: href, Method: method}, nil
 }
 
 // NewCurieLink initializes a special LinkObject required for establishing CURIEs.
