@@ -15,7 +15,7 @@ func TestNewLinkRelation(t *testing.T) {
 	wantedName := "link"
 	wantedHref := "http://{rel}"
 
-	wantedCurieLink, _ := NewCurieLink(wantedName, wantedHref, "GET")
+	wantedCurieLink, _ := NewCurieLink(wantedName, wantedHref)
 	wantedCuriedRelationName := wantedName + ":" + wantedRelationName
 
 	if relation.Name() != wantedRelationName {

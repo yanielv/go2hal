@@ -92,7 +92,7 @@ func TestAddCurieLink(t *testing.T) {
 	resourceObject := NewResourceObject()
 	curieName := "doc"
 	curieHref := "http://doc/{rel}"
-	curieLink, _ := NewCurieLink(curieName, curieHref, "GET")
+	curieLink, _ := NewCurieLink(curieName, curieHref)
 
 	resourceObject.AddCurieLinks([]*LinkObject{curieLink})
 
@@ -111,7 +111,7 @@ func TestAddCurieLink(t *testing.T) {
 		t.Errorf("CurieLink == %+v, want %+v", val, curieLink)
 	}
 
-	curieLink2, _ := NewCurieLink(curieName, curieHref, "GET")
+	curieLink2, _ := NewCurieLink(curieName, curieHref)
 	resourceObject.AddCurieLinks([]*LinkObject{curieLink, curieLink2})
 
 	val2 := resourceObject.Links().Content["curies"]

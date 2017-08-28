@@ -99,7 +99,7 @@ func TestEncoderWithEmbeddedResources(t *testing.T) {
 
 	for _, actor := range actors {
 		href := fmt.Sprintf("%s/%d", wanted[0], actor.Id)
-		selfLink, _ := NewLinkObject(href, "GET")
+		selfLink, _ := NewLinkObject(href)
 
 		self, _ := NewLinkRelation(relationtype.Self)
 		self.SetLink(selfLink)

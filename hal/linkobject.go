@@ -12,7 +12,7 @@ import "errors"
 // property description.
 type LinkObject struct {
 	Href        string   `json:"href,omitempty"`        //required
-	Method      string   `json:"method,omitempty"`      //required
+	Method      string   `json:"method,omitempty"`      //optional
 	Allow       []string `json:"allow,omitempty"`       //optional
 	Templated   bool     `json:"templated,omitempty"`   //optional
 	Type        string   `json:"type,omitempty"`        //optional
@@ -24,21 +24,21 @@ type LinkObject struct {
 }
 
 // NewLinkObject initializes a LinkObject with it's required href value.
-func NewLinkObject(href string, method string) (*LinkObject, error) {
+func NewLinkObject(href string) (*LinkObject, error) {
 	if href == "" {
 		return nil, errors.New("LinkObject requires a href value")
 	}
 
-	return &LinkObject{Href: href, Method: method}, nil
+	return &LinkObject{Href: href}, nil
 }
 
 // NewCurieLink initializes a special LinkObject required for establishing CURIEs.
-func NewCurieLink(name string, href string, method string) (*LinkObject, error) {
+func NewCurieLink(name string, href string) (*LinkObject, error) {
 	if name == "" {
 		return nil, errors.New("CURIE LinkObject requires a name value")
 	}
 
-	linkObject, error := NewLinkObject(href, method)
+	linkObject, error := NewLinkObject(href)
 
 	if error != nil {
 		return nil, error

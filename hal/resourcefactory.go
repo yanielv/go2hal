@@ -6,9 +6,9 @@ package hal
 
 // ResourceFactory is a helper for creating resources and links.
 type ResourceFactory interface {
-	CreateRootResource(href string, method string) Resource
-	CreateEmbeddedResource(href string, method string) Resource
-	CreateLink(relationName string, href string, method string, curieLinkName string) LinkRelation
+	CreateRootResource(href string) Resource
+	CreateEmbeddedResource(href string) Resource
+	CreateLink(relationName string, href string, curieLinkName string) LinkRelation
 	CreateResourceLink(relationName string, curieLinkName string) ResourceRelation
 }
 
@@ -31,8 +31,8 @@ func NewResourceFactory(curieLinks []*LinkObject) ResourceFactory {
 // CreateLink creates a Link Relation with given relationName and href. A CURIE link can
 // be added by curieLinkName. The real CURIE link is picked from the set of CURIE links the factory
 // is initialised with.
-func (rf *resourceFactory) CreateLink(relationName string, href string, method string, curieLinkName string) LinkRelation {
-	link, linkError := NewLinkObject(href, method)
+func (rf *resourceFactory) CreateLink(relationName string, href string, curieLinkName string) LinkRelation {
+	link, linkError := NewLinkObject(href)
 
 	if linkError != nil {
 		return nil
@@ -80,8 +80,8 @@ func (rf *resourceFactory) CreateResourceLink(relationName string, curieLinkName
 
 // CreateRootResource creates a root Resource with self link from given href.
 // Additionally all CURIE links given at ResourceFactory initialisation are added.
-func (rf *resourceFactory) CreateRootResource(href string, method string) Resource {
-	resource := rf.createResource(href, method)
+func (rf *resourceFactory) CreateRootResource(href string) Resource {
+	resource := rf.createResource(href)
 
 	curieLinks := []*LinkObject{}
 
@@ -95,15 +95,15 @@ func (rf *resourceFactory) CreateRootResource(href string, method string) Resour
 }
 
 // CreateEmbeddedResource creates an embedded Resource with self link from given href.
-func (rf *resourceFactory) CreateEmbeddedResource(href string, method string) Resource {
-	resource := rf.createResource(href, method)
+func (rf *resourceFactory) CreateEmbeddedResource(href string) Resource {
+	resource := rf.createResource(href)
 
 	return resource
 }
 
-func (rf *resourceFactory) createResource(href string, method string) Resource {
+func (rf *resourceFactory) createResource(href string) Resource {
 	resource := NewResourceObject()
-	selfLink, err := NewLinkObject(href, method)
+	selfLink, err := NewLinkObject(href)
 
 	if err != nil {
 		return resource

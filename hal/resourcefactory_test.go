@@ -33,7 +33,7 @@ func TestCreateRootResource(t *testing.T) {
 	curieLinks[0] = &LinkObject{Name: "Curie1"}
 	factory := NewResourceFactory(curieLinks)
 
-	root := factory.CreateRootResource("", "")
+	root := factory.CreateRootResource("")
 
 	if root == nil {
 		t.Errorf("Root Resource is nil.")
@@ -58,7 +58,7 @@ func TestCreateRootResource(t *testing.T) {
 	}
 
 	selfLink := "http://self"
-	root = factory.CreateRootResource(selfLink, "GET")
+	root = factory.CreateRootResource(selfLink)
 	links = root.Links()
 
 	if links.Content[relationtype.Self] == nil {
@@ -75,7 +75,7 @@ func TestCreateEmbeddedResource(t *testing.T) {
 	curieLinks[0] = &LinkObject{Name: "Curie1"}
 	factory := NewResourceFactory(curieLinks)
 
-	resource := factory.CreateEmbeddedResource("", "GET")
+	resource := factory.CreateEmbeddedResource("")
 
 	if resource == nil {
 		t.Errorf("Embedded resource is nil.")
@@ -92,7 +92,7 @@ func TestCreateEmbeddedResource(t *testing.T) {
 	}
 
 	selfLink := "http://self"
-	resource = factory.CreateEmbeddedResource(selfLink, "GET")
+	resource = factory.CreateEmbeddedResource(selfLink)
 	links = resource.Links()
 
 	if links.Content[relationtype.Self] == nil {
@@ -112,21 +112,21 @@ func TestCreateLink(t *testing.T) {
 	relationName := ""
 	href := ""
 	curieLinkName := ""
-	link := factory.CreateLink(relationName, href, "GET", curieLinkName)
+	link := factory.CreateLink(relationName, href, curieLinkName)
 
 	if link != nil {
 		t.Errorf("Link should be nil: %v", link)
 	}
 
 	href = "href"
-	link = factory.CreateLink(relationName, href, "GET", curieLinkName)
+	link = factory.CreateLink(relationName, href, curieLinkName)
 
 	if link != nil {
 		t.Errorf("Link should be nil: %v", link)
 	}
 
 	relationName = "relationName"
-	link = factory.CreateLink(relationName, href, "GET", curieLinkName)
+	link = factory.CreateLink(relationName, href, curieLinkName)
 
 	if link == nil {
 		t.Errorf("Link is nil")
@@ -145,7 +145,7 @@ func TestCreateLink(t *testing.T) {
 	}
 
 	curieLinkName = curieLinks[0].Name
-	link = factory.CreateLink(relationName, href, "GET", curieLinkName)
+	link = factory.CreateLink(relationName, href, curieLinkName)
 
 	if link.FullName() != curieLinkName+":"+relationName {
 		t.Errorf("Full name is %s, wanted %s", link.FullName(), curieLinkName+":"+relationName)
