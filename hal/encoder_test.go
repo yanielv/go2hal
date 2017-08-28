@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/pmoule/go2hal/hal/relationtype"
+	"github.com/yanielv/go2hal/hal/relationtype"
 )
 
 type Actor struct {
@@ -85,7 +85,7 @@ func TestEncoderWithEmbeddedResources(t *testing.T) {
 	encoder := NewEncoder()
 
 	root := NewResourceObject()
-	link := &LinkObject{Href: wanted[0]}
+	link := &LinkObject{Href: wanted[0], Method: "GET"}
 	self, _ := NewLinkRelation(relationtype.Self)
 	self.SetLink(link)
 	root.AddLink(self)
@@ -99,7 +99,7 @@ func TestEncoderWithEmbeddedResources(t *testing.T) {
 
 	for _, actor := range actors {
 		href := fmt.Sprintf("%s/%d", wanted[0], actor.Id)
-		selfLink, _ := NewLinkObject(href)
+		selfLink, _ := NewLinkObject(href, "GET")
 
 		self, _ := NewLinkRelation(relationtype.Self)
 		self.SetLink(selfLink)

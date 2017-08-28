@@ -8,7 +8,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/pmoule/go2hal/hal/relationtype"
+	"github.com/yanielv/go2hal/hal/relationtype"
 )
 
 // Resource is the root element of a HAL document.
