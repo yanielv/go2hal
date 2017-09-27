@@ -174,7 +174,7 @@ func (er embeddedResources) ToMap() NamedMap {
 	for _, val := range er {
 		resources := val.Resources()
 
-		var properties []PropertyMap
+		properties := make([]PropertyMap, 0)
 
 		for _, resource := range resources {
 			resourceObject := resource.(*resourceObject)
