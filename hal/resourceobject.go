@@ -65,6 +65,11 @@ func (r *resourceObject) readDataFields(v reflect.Value) {
 		tField := vType.Field(i)
 		vField := v.Field(i)
 
+		// do the same checking step as readDataFields method does in the beginning
+		if vField.Kind() == reflect.Ptr {
+			vField = vField.Elem()
+		}
+
 		if !vField.CanInterface() {
 			continue
 		}
