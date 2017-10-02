@@ -7,6 +7,7 @@ package hal
 import (
 	"reflect"
 	"strings"
+	"time"
 
 	"github.com/yanielv/go2hal/hal/relationtype"
 )
@@ -50,6 +51,11 @@ func (r *resourceObject) AddData(data interface{}) {
 }
 
 func (r *resourceObject) readDataFields(v reflect.Value) {
+
+	if isZeroValue(v) {
+		return
+	}
+
 	vType := v.Type()
 
 	if vType.Kind() == reflect.Ptr {
@@ -75,6 +81,9 @@ func (r *resourceObject) readDataFields(v reflect.Value) {
 		}
 
 		if tField.Anonymous {
+			if isZeroValue(vField) {
+				return
+			}
 			if !vField.CanAddr() {
 				anonymValue := reflect.ValueOf(vField.Interface())
 				r.readDataFields(anonymValue)
@@ -104,15 +113,24 @@ func (r *resourceObject) readDataFields(v reflect.Value) {
 }
 
 func isZeroValue(val reflect.Value) bool {
+	if val == reflect.Zero(reflect.TypeOf(val)).Interface() {
+		return true
+	}
+
 	switch val.Kind() {
 	case reflect.Func, reflect.Map, reflect.Slice:
 		return val.IsNil()
 	case reflect.Struct:
 		isZero := true
 
+		if value, ok := val.Interface().(time.Time); ok {
+			return value.IsZero()
+		}
+
 		for i := 0; i < val.NumField(); i++ {
 			isZero = isZero && isZeroValue(val.Field(i))
 		}
+
 		return isZero
 	case reflect.Array:
 		isZero := true
@@ -120,13 +138,17 @@ func isZeroValue(val reflect.Value) bool {
 		for i := 0; i < val.Len(); i++ {
 			isZero = isZero && isZeroValue(val.Index(i))
 		}
+
 		return isZero
 	}
 
-	value := val.Interface()
-	zeroValue := reflect.Zero(val.Type()).Interface()
+	if val.CanInterface() {
+		value := val.Interface()
+		zeroValue := reflect.Zero(val.Type()).Interface()
+		return value == zeroValue
+	}
 
-	return value == zeroValue
+	return true
 }
 
 func (r *resourceObject) Links() NamedMap {
