@@ -76,14 +76,21 @@ func (r *resourceObject) readDataFields(v reflect.Value) {
 			vField = vField.Elem()
 		}
 
+		if !vField.IsValid() {
+			fieldName, omitEmpty, ok := readJSONInfo(tField)
+			if !ok || omitEmpty {
+				continue
+			}
+			r.data[fieldName] = nil
+			continue
+		}
+
 		if !vField.CanInterface() {
 			continue
 		}
 
 		if tField.Anonymous {
-			if isZeroValue(vField) {
-				return
-			}
+
 			if !vField.CanAddr() {
 				anonymValue := reflect.ValueOf(vField.Interface())
 				r.readDataFields(anonymValue)
@@ -110,6 +117,20 @@ func (r *resourceObject) readDataFields(v reflect.Value) {
 
 		r.data[fieldName] = vField.Interface()
 	}
+}
+
+func readJSONInfo(tField reflect.StructField) (string, bool, bool) {
+	jsonValue, ok := tField.Tag.Lookup("json")
+
+	if !ok || jsonValue == "-" {
+		return "", true, false
+	}
+
+	tokens := strings.Split(jsonValue, ",")
+	fieldName := tokens[0]
+	omitEmpty := len(tokens) > 1 && strings.TrimSpace(tokens[1]) == "omitempty"
+
+	return fieldName, omitEmpty, true
 }
 
 func isZeroValue(val reflect.Value) bool {
